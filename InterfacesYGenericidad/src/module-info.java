@@ -5,5 +5,5 @@
  * @author User
  *
  */
-module Tp1EDD {
+module InterfacesYGenericidad {
 }
