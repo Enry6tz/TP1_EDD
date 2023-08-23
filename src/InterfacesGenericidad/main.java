@@ -2,6 +2,9 @@ package InterfacesGenericidad;
 
 public class main {
 	public static void main(String[] args){
-		System.out.println("hello");
+	    
+	        MiInterfaz instancia = new MiClase();
+	        instancia.metodo1();
+	        int resultado = instancia.metodo2("Hola");
 	}
 }
