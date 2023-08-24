@@ -1,9 +1,15 @@
-# Interfaces y Genericidad parametrica
+# Tema 1: Interfaces y Genericidad parametrica
 
+
+* primer parcial: 30/9
+* segundo parcial: 11/9
+* entrega proyecto: 18/11
+* recuperatorio: sabado 25/11
+* Re-entrega 27/11
 
 ## Interfaces
 
->En Java, una interfaz es una colección de métodos abstractos (métodos sin implementación) que se utilizan para definir un contrato o conjunto de comportamientos que una clase concreta debe implementar. Las interfaces permiten la implementación de múltiples herencias, lo que facilita la creación de clases que puedan cumplir múltiples roles o funcionalidades.
+>En Java, una interfaz es una colección de métodos (métodos sin implementación, pero no abstractos) que se utilizan para definir un contrato o conjunto de comportamientos que una clase concreta debe implementar. Las interfaces permiten la implementación de múltiples herencias, lo que facilita la creación de clases que puedan cumplir múltiples roles o funcionalidades.
 
 1. Definicion de una interfaz:
 ```java
@@ -12,7 +18,7 @@
         int metodo2(String parametro);
     }
 ```
-2. Implementacion de una interfaz en una clase:
+1. Implementacion de una interfaz en una clase:
 
 ```java
     public class MiClase implements MiInterfaz{
@@ -46,7 +52,7 @@
 
 ## Genericidad Parametrica
 
-> Genericidad: La genericidad es una técnica que permite definir clases, interfaces y métodos que pueden trabajar con varios tipos de datos de manera segura y flexible. Antes de la introducción de la genericidad en Java, si querías escribir una estructura de datos (como una lista o un conjunto) que almacenara elementos de diferentes tipos, tendrías que crear una versión de esa estructura para cada tipo de dato, lo que resultaba en código duplicado y menos mantenible.
+> Genericidad: La genericidad es una técnica que permite definir clases, interfaces y métodos que pueden trabajar con varios tipos de datos de manera segura y flexible. Antes de la introducción de la genericidad en Java, si querías escribir una estructura de datos (como una lista o un conjunto) que almacenara elementos de diferentes tipos, tendrías que crear una versión de esa estructura para cada tipo de dato, lo que resultaba en código duplicado y menos mantenible. **Usa la relacion ES-UN al igual que la Herencia**
 
 la *Genericidad Parametrica*  es un enfoque en el que se utiliza un tipo generico o parametro de tipo para definir una clase, interfaz o metodo. Esto permite que el mismo codigo fincione con varios tipos de datos diferentes. En Java, se utilizan los corchetes angulares `<T>` para indicar un tipo generico
 
@@ -130,20 +136,40 @@ public interface MiInterfaz<T> {
 2. Implementamos la interfaz de la siguiente manera:
 
 ```java
-
 public class MiClase<T> implements MiInterfaz<T> {
-    private List<T> elementos = new ArrayList<>();
+    private Object[] elementos;
+    private int tamaño;
+    private static final int CAPACIDAD_INICIAL = 10; // Capacidad inicial del arreglo
+
+    public MiClase() {
+        elementos = new Object[CAPACIDAD_INICIAL];
+        tamaño = 0;
+    }
 
     @Override
     public void agregar(T elemento) {
-        elementos.add(elemento);
+        if (tamaño == elementos.length) {
+            redimensionarArreglo();
+        }
+        elementos[tamaño++] = elemento;
     }
 
     @Override
     public T obtener(int indice) {
-        return elementos.get(indice);
+        if (indice >= 0 && indice < tamaño) {
+            return (T) elementos[indice];
+        }
+        throw new IndexOutOfBoundsException("Índice fuera de rango");
+    }
+
+    private void redimensionarArreglo() {
+        int nuevaCapacidad = elementos.length * 2;
+        Object[] nuevoArreglo = new Object[nuevaCapacidad];
+        System.arraycopy(elementos, 0, nuevoArreglo, 0, tamaño);
+        elementos = nuevoArreglo;
     }
 }
+
 
 ```
 * En este ejemplo, la clase `MiClase` implementa la interfaz `MiInterfaz` utilizando la genericidad paramétrica. Esto permite que `MiClase` trabaje con cualquier tipo de dato que desees.
@@ -163,9 +189,45 @@ public class Principal {
 }
 ```
 * En este ejemplo, creamos instancias de `MiClase` a través de la interfaz `MiInterfaz` con tipos de datos diferentes (String e Integer). La genericidad paramétrica en la interfaz y la clase implementadora permite que puedas trabajar con **diferentes tipos de datos** utilizando el mismo código.
-***
+
 **Obs:** *@Override es una anotación en Java que se utiliza antes de un método para indicar que estás sobrescribiendo un método de una clase padre o una interfaz. En otras palabras, estás proporcionando una implementación específica para ese método en la clase actual.*
 
+**Obs:** *tipo estatico tiene que ser igual al tipo de la interfaz: si pones el tipo estatico que necesitas, solo podras mandarle mensajes del tipo que puede recibir*
+- - -
+
+`super.f()` es el constructor de la instancia anterior, es la inmediata anterior nunca puede saltar clases.
+
+arreglo de objetos con genericidad de herencia.
+
+
+
+
+
+---
+
+## recursividad: recorrido de arreglos
+
+* **CR:** e pertenece a `A` si `e` es igual al ultimo elemento de `A` o si `e` pertenece a `A'`.
+  * donde `A` es `A` sin el ultimo elemento.
+
+* **CB:** si `A` no tiene elementos entonces `e` no pertenece a `A`
+
+```java
+public boolean pertenece(E e){
+    return perteneceRec(e, A.length);
+}
+//metodo privado perteneceRec(e, A.length)
+
+private boolean perteneceRec(E e, int n){
+    boolean res ;
+    if(n == 0){
+        res= false;
+    }else{
+        res = pertenece(A[n-1].equals(e) ||pertenece (e, n-1))
+    }
+    return res;
+}
+```
 
 
 
